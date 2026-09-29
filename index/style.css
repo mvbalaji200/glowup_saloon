@@ -1,0 +1,72 @@
+html {
+  font-family: Helvetica, Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* Navbar */
+.navbar .nav-link {
+  padding: 0.5rem 1rem;
+  color: #ffffff;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: rgb(255, 200, 0);
+}
+
+/* Hero Section: Exact 100vh Full Viewport Height */
+#home {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  background:url("https://images.unsplash.com/photo-1570613856979-5b4ee86535a1?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDI5fHx8ZW58MHx8fHx8") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+}
+
+.hero-box {
+  color: #ffffff;
+}
+
+.hero-box span {
+  color:rgb(255, 200, 0);
+}
+
+/* Variety Circular Items */
+.item-circle img {
+  border-radius: 50%;
+  transition: 0.3s ease;
+}
+
+.item-circle:hover img {
+  transform: scale(1.08);
+}
+
+/* Section Line */
+.custom-hr {
+  width: 60px;
+  height: 3px;
+  background-color: rgb(255, 200, 0);
+  opacity: 1;
+  border: none;
+}
+
+/* Products */
+.product {
+  cursor: pointer;
+}
+
+.product img {
+  transition: 0.3s all;
+}
+
+.product:hover img {
+  opacity: 0.7;
+}
+
+/* Footer */
+footer {
+  background-color: rgb(12, 12, 12);
+}
