@@ -1,4 +1,3 @@
-// first fetch just to get the categories and turn on inputs
 fetch("./services.json")
   .then(function(res) {
     return res.json();
@@ -7,7 +6,6 @@ fetch("./services.json")
     document.getElementById("search-box").disabled = false;
     document.getElementById("cat-select").disabled = false;
 
-    // loop through all items to find unique categories
     for (var i = 0; i < items.length; i++) {
       var alreadyAdded = false;
       var dropdown = document.getElementById("cat-select");
@@ -26,7 +24,6 @@ fetch("./services.json")
       }
     }
 
-    // load all items immediately on page startup
     loadItems();
   });
 
@@ -42,25 +39,26 @@ function loadItems() {
     })
     .then(function(data) {
       for (var i = 0; i < data.length; i++) {
-        // check category
         if (chosenCategory == "" || chosenCategory == data[i].category) {
           var everythingInItem = data[i].id + " " + data[i].name + " " + data[i].category + " " + data[i].size + " " + data[i].price;
           everythingInItem = everythingInItem.toLowerCase();
 
-          // check search text
           if (userText == "" || everythingInItem.indexOf(userText) != -1) {
             
+            var card = document.createElement("article");
+            card.className = "rounded border border-stone-300 bg-white p-4 shadow-sm";
+
             var p1 = document.createElement("p");
+            p1.className = "mb-2 font-semibold";
             p1.textContent = "ID: " + data[i].id + " - " + data[i].name;
 
             var p2 = document.createElement("p");
+            p2.className = "text-sm text-stone-600";
             p2.textContent = "Category: " + data[i].category + " | Size: " + data[i].size + " | Price: $" + data[i].price;
 
-            var hr = document.createElement("hr");
-
-            resultsBox.appendChild(p1);
-            resultsBox.appendChild(p2);
-            resultsBox.appendChild(hr);
+            card.appendChild(p1);
+            card.appendChild(p2);
+            resultsBox.appendChild(card);
           }
 
         }

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "name": "Hydrating Argan Shampoo",
+    "category": "Shampoo",
+    "size": "300 ml",
+    "price": 18.00
+  },
+  {
+    "id": 2,
+    "name": "Daily Repair Conditioner",
+    "category": "Conditioner",
+    "size": "250 ml",
+    "price": 16.50
+  },
+  {
+    "id": 3,
+    "name": "Coconut Moisture Hair Mask",
+    "category": "Hair Mask",
+    "size": "200 ml",
+    "price": 22.00
+  },
+  {
+    "id": 4,
+    "name": "Heat Shield Styling Spray",
+    "category": "Styling",
+    "size": "150 ml",
+    "price": 19.00
+  },
+  {
+    "id": 5,
+    "name": "Lightweight Shine Hair Oil",
+    "category": "Hair Oil",
+    "size": "100 ml",
+    "price": 17.50
+  },
+  {
+    "id": 6,
+    "name": "Curl Defining Cream",
+    "category": "Styling Cream",
+    "size": "180 ml",
+    "price": 20.00
+  },
+  {
+    "id": 7,
+    "name": "Gentle Scalp Balance Shampoo",
+    "category": "Shampoo",
+    "size": "300 ml",
+    "price": 17.00
+  },
+  {
+    "id": 8,
+    "name": "Smooth Finish Leave-In Cream",
+    "category": "Styling Cream",
+    "size": "150 ml",
+    "price": 18.50
+  },
+  {
+    "id": 9,
+    "name": "Color Care Conditioner",
+    "category": "Conditioner",
+    "size": "250 ml",
+    "price": 19.50
+  },
+  {
+    "id": 10,
+    "name": "Keratin Smoothing Hair Serum",
+    "category": "Serum",
+    "size": "60 ml",
+    "price": 21.00
+  },
+  {
+    "id": 11,
+    "name": "Deep Conditioning Butter Mask",
+    "category": "Hair Mask",
+    "size": "250 ml",
+    "price": 24.00
+  },
+  {
+    "id": 12,
+    "name": "Flexible Hold Styling Cream",
+    "category": "Styling Cream",
+    "size": "100 ml",
+    "price": 15.00
+  },
+  {
+    "id": 13,
+    "name": "Rosemary Mint Scalp Oil",
+    "category": "Scalp Care",
+    "size": "100 ml",
+    "price": 16.00
+  },
+  {
+    "id": 14,
+    "name": "Volume Boost Shampoo",
+    "category": "Shampoo",
+    "size": "250 ml",
+    "price": 16.00
+  },
+  {
+    "id": 15,
+    "name": "Silk Finish Hair Serum",
+    "category": "Serum",
+    "size": "50 ml",
+    "price": 23.00
+  },
+  {
+    "id": 16,
+    "name": "Daily Detangling Conditioner",
+    "category": "Conditioner",
+    "size": "300 ml",
+    "price": 17.50
+  },
+  {
+    "id": 17,
+    "name": "Aloe Cooling Scalp Tonic",
+    "category": "Scalp Care",
+    "size": "120 ml",
+    "price": 18.00
+  },
+  {
+    "id": 18,
+    "name": "Curl Hydration Hair Mask",
+    "category": "Hair Mask",
+    "size": "200 ml",
+    "price": 21.50
+  },
+  {
+    "id": 19,
+    "name": "Strong Hold Finishing Spray",
+    "category": "Styling",
+    "size": "200 ml",
+    "price": 18.50
+  },
+  {
+    "id": 20,
+    "name": "Nourishing Avocado Hair Cream",
+    "category": "Styling Cream",
+    "size": "180 ml",
+    "price": 19.00
+  }
+]

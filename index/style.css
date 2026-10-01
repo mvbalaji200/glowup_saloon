@@ -34,15 +34,6 @@ html {
   color:rgb(255, 200, 0);
 }
 
-/* Variety Circular Items */
-.item-circle img {
-  border-radius: 50%;
-  transition: 0.3s ease;
-}
-
-.item-circle:hover img {
-  transform: scale(1.08);
-}
 
 /* Section Line */
 .custom-hr {
@@ -53,7 +44,6 @@ html {
   border: none;
 }
 
-/* Products */
 .product {
   cursor: pointer;
 }
@@ -66,7 +56,6 @@ html {
   opacity: 0.7;
 }
 
-/* Footer */
 footer {
   background-color: rgb(12, 12, 12);
 }
