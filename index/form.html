@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlowUP Saloons</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="m-0 p-0 bg-stone-50 text-stone-800">
+
+    <div class="relative isolate flex min-h-screen w-full flex-col overflow-hidden">
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 z-0 scale-105 bg-cover bg-center blur-sm"
+        style="background-image: url('https://images.unsplash.com/photo-1570613856979-5b4ee86535a1?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDI5fHx8ZW58MHx8fHx8');"
+      ></div>
+      <div aria-hidden="true" class="absolute inset-0 z-0 bg-black/35"></div>
+      <nav class="relative z-10 flex items-center justify-between px-6 py-6 sm:px-12 text-white bg-black/30 backdrop-blur-xs">
+        <a href="index.html" aria-label="GlowUP home" class="inline-flex items-center">
+          <img src="scissor-svgrepo-com (1).svg" alt="GlowUP" class="size-10" />
+        </a>
+        <div class="flex items-center gap-6 text-sm font-medium">
+          <a href="branch.html" class="hover:underline">Branches</a>
+          <a href="search.html" class="hover:underline">Products</a>
+        <a href="search.html" aria-label="Search" class="p-1 hover:opacity-80">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m0 0a7.5 7.5 0 1 0-10.607-10.607 7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+        </a>
+        </div>
+      </nav>
+
+      <main class="relative z-10 flex flex-1 items-center justify-center px-4 py-10">
+        <section class="w-full max-w-md rounded-lg border border-white/50 bg-white/60 p-6 backdrop-blur-sm sm:p-8">
+      <h2 class="mb-4 text-xl font-bold">Book an Appointment</h2>
+
+      <div id="success-msg" class="mb-4 hidden text-sm text-green-700" role="status" aria-live="polite">
+        Appointment Successful!
+      </div>
+
+      <form id="enquiry-form" class="space-y-3" novalidate>
+        
+        <div>
+          <label for="name" class="mb-1 block text-sm">Full Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            required 
+            placeholder="Name" 
+            aria-describedby="err-name"
+            class="w-full border p-2"
+          />
+          <span id="err-name" class="mt-1 hidden text-sm text-red-600">Please enter your name.</span>
+        </div>
+
+        <div>
+          <label for="phone" class="mb-1 block text-sm">Phone Number (10-digit Indian)</label>
+          <input 
+            type="tel" 
+            id="phone" 
+            required 
+            maxlength="10" 
+            placeholder="9876543210" 
+            pattern="^[0-9]{10}$" 
+            aria-describedby="err-phone"
+            class="w-full border p-2"
+          />
+          <span id="err-phone" class="mt-1 hidden text-sm text-red-600">Must be a valid 10-digit number starting with 6-9.</span>
+        </div>
+
+        <div>
+          <label for="branch" class="mb-1 block text-sm">Branch</label>
+          <select id="branch" required aria-describedby="err-branch" class="w-full border p-2">
+            <option value="">-- Select Branch --</option>
+            <option value="Branch 1">Branch 1</option>
+            <option value="Branch 2">Branch 2</option>
+            <option value="Branch 3">Branch 3</option>
+            <option value="Branch 4">Branch 4</option>
+            <option value="Branch 5">Branch 5</option>
+            <option value="Branch 6">Branch 6</option>
+          </select>
+          <span id="err-branch" class="mt-1 hidden text-sm text-red-600">Please choose a branch.</span>
+        </div>
+
+        <div>
+          <label for="service" class="mb-1 block text-sm">Service</label>
+          <select id="service" required aria-describedby="err-service" class="w-full border p-2">
+            <option value="">-- Select Service --</option>
+            <option value="Haircut">Haircut</option>
+            <option value="Hair Spa">Hair Spa</option>
+            <option value="Hair Detailing">Hair Detailing</option>
+            <option value="Hair Coloring">Hair Coloring</option>
+          </select>
+          <span id="err-service" class="mt-1 hidden text-sm text-red-600">Please select a service.</span>
+        </div>
+
+        <div>
+          <label for="date" class="mb-1 block text-sm">Preferred Date</label>
+          <input 
+            type="date" 
+            id="date" 
+            required 
+            class="w-full border p-2"
+          />
+          <span id="err-date" class="mt-1 hidden text-sm text-red-600">Please pick today or a future date.</span>
+        </div>
+
+        <button type="submit" class="w-full bg-black p-2 text-white">
+          Submit Enquiry
+        </button>
+      </form>
+        </section>
+      </main>
+    </div>
+
+
+    <footer class="border-t border-stone-200 bg-white px-4 py-8 text-sm text-stone-600">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="mb-2 font-semibold text-stone-800">Contact GlowUP</h2>
+        <p>Ready to book? <a href="form.html" class="underline">Send us an enquiry</a> or <a href="branch.html" class="underline">find a branch</a>.</p>
+        <p class="mt-4 text-xs">© 2026 GlowUP Saloons. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      const form = document.getElementById("enquiry-form");
+      const successMessage = document.getElementById("success-msg");
+      const today = new Date();
+      const localToday = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0"),
+      ].join("-");
+      const dateInput = document.getElementById("date");
+      dateInput.min = localToday;
+
+      const fields = [
+        {
+          input: document.getElementById("name"),
+          error: document.getElementById("err-name"),
+          isValid: (value) => value.trim().length > 0,
+        },
+        {
+          input: document.getElementById("phone"),
+          error: document.getElementById("err-phone"),
+          isValid: (value) => /^[6-9][0-9]{9}$/.test(value),
+        },
+        {
+          input: document.getElementById("branch"),
+          error: document.getElementById("err-branch"),
+          isValid: (value) => value !== "",
+        },
+        {
+          input: document.getElementById("service"),
+          error: document.getElementById("err-service"),
+          isValid: (value) => value !== "",
+        },
+        {
+          input: dateInput,
+          error: document.getElementById("err-date"),
+          isValid: (value) => value !== "" && value >= localToday,
+        },
+      ];
+
+      function validateField(field) {
+        const isValid = field.isValid(field.input.value);
+        field.error.classList.toggle("hidden", isValid);
+        field.input.setAttribute("aria-invalid", String(!isValid));
+        return isValid;
+      }
+
+      fields.forEach((field) => {
+        field.input.addEventListener("input", () => {
+          validateField(field);
+          successMessage.classList.add("hidden");
+        });
+        field.input.addEventListener("change", () => {
+          validateField(field);
+          successMessage.classList.add("hidden");
+        });
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        successMessage.classList.add("hidden");
+
+        const isFormValid = fields.map(validateField).every(Boolean);
+        if (!isFormValid) {
+          fields.find((field) => field.input.getAttribute("aria-invalid") === "true")
+            .input.focus();
+          return;
+        }
+
+        successMessage.classList.remove("hidden");
+        form.reset();
+        dateInput.min = localToday;
+        fields.forEach((field) => field.input.removeAttribute("aria-invalid"));
+      });
+    </script>
+  </body>
+</html>
