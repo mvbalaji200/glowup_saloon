@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Beard Trim",
+    "price": 250.00,
+    "duration_minutes": 20
+  },
+  {
+    "name": "Blowout",
+    "price": 600.00,
+    "duration_minutes": 30
+  },
+  {
+    "name": "Facial",
+    "price": 1200.00,
+    "duration_minutes": 60
+  },
+  {
+    "name": "Hair Coloring",
+    "price": 2500.00,
+    "duration_minutes": 90
+  },
+  {
+    "name": "Haircut",
+    "price": 400.00,
+    "duration_minutes": 30
+  },
+  {
+    "name": "Head Massage",
+    "price": 500.00,
+    "duration_minutes": 30
+  },
+  {
+    "name": "Keratin Treatment",
+    "price": 4000.00,
+    "duration_minutes": 120
+  },
+  {
+    "name": "Manicure",
+    "price": 700.00,
+    "duration_minutes": 45
+  },
+  {
+    "name": "Pedicure",
+    "price": 800.00,
+    "duration_minutes": 45
+  },
+  {
+    "name": "Skin Treatment",
+    "price": 1800.00,
+    "duration_minutes": 60
+  }
+]

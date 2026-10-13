@@ -1,0 +1,142 @@
+
+```bash
+php artisan migrate:fresh
+php artisan migrate:status
+
+```
+
+Add `1`, Service `1` (30 mins), and Stylist `1` (`Anu`) :
+```bash
+php artisan tinker --execute="
+DB::table('branches')->insert(['id' => 1, 'name' => 'GlowUp Kakkanad', 'created_at' => now(), 'updated_at' => now()]);
+DB::table('services')->insert(['id' => 1, 'name' => 'Haircut & Styling', 'duration_minutes' => 30, 'price' => 500, 'created_at' => now(), 'updated_at' => now()]);
+DB::table('stylists')->insert(['id' => 1, 'name' => 'Anu', 'branch_id' => 1, 'created_at' => now(), 'updated_at' => now()]);
+echo 'Seeded ID 1 for Branch, Service, and Stylist.' . PHP_EOL;
+"
+
+```
+
+Import
+
+```bash
+php artisan customers:import database/data/customers.csv
+
+```
+
+
+3. **Fetch Free 30-Minute Slots (GS-9):** Queries tomorrow's schedule in Asia/Kolkata timezone using a single batch query.
+Request available slots for Branch `1` and Service `1` for tomorrow:
+
+```bash
+php artisan tinker --execute="
+\$tomorrow = now('Asia/Kolkata')->addDay()->toDateString();
+\$req = Illuminate\Http\Request::create('/api/slots?branch_id=1&service_id=1&date=' . \$tomorrow, 'GET');
+\$res = app()->handle(\$req);
+echo 'Status: ' . \$res->getStatusCode() . PHP_EOL;
+echo \$res->getContent() . PHP_EOL;
+"
+
+```
+
+
+4. **Prove Concurrency Guard & SMS Logging (GS-10 — Part 1):** Fires two identical bookings for 10:00 AM to trigger 201 Created followed by 409 Conflict.
+Send the first booking request for tomorrow at `10:00:00`, immediately followed by a duplicate request for the exact same stylist and time:
+
+```bash
+php artisan tinker --execute="
+\$time = now('Asia/Kolkata')->addDay()->format('Y-m-d 10:00:00');
+\$payload = [
+    'customer_phone' => '9876543210',
+    'branch_id'      => 1,
+    'service_id'     => 1,
+    'stylist_id'     => 1,
+    'starts_at'      => \$time,
+];
+
+\$req1 = Illuminate\Http\Request::create('/api/bookings', 'POST', [], [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'], json_encode(\$payload));
+\$res1 = app()->handle(\$req1);
+echo '1st Booking Status: ' . \$res1->getStatusCode() . PHP_EOL;
+
+\$req2 = Illuminate\Http\Request::create('/api/bookings', 'POST', [], [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'], json_encode(\$payload));
+\$res2 = app()->handle(\$req2);
+echo '2nd Booking Status (Duplicate): ' . \$res2->getStatusCode() . PHP_EOL;
+echo '2nd Booking Response: ' . \$res2->getContent() . PHP_EOL;
+"
+
+```
+
+Show the interviewer that the `10:00:00` slot is now gone from `/api/slots` and that the confirmation SMS was logged in `sms_logs`:
+
+```bash
+php artisan tinker --execute="
+\$tomorrow = now('Asia/Kolkata')->addDay()->toDateString();
+\$reqSlots = Illuminate\Http\Request::create('/api/slots?branch_id=1&service_id=1&date=' . \$tomorrow, 'GET');
+\$resSlots = app()->handle(\$reqSlots);
+echo 'Is 10:00:00 still available? ' . (str_contains(\$resSlots->getContent(), '10:00:00') ? 'YES' : 'NO (Blocked)') . PHP_EOL;
+
+\$sms = DB::table('sms_logs')->latest('id')->first();
+echo 'Logged SMS: ' . \$sms->message . PHP_EOL;
+"
+
+```
+
+
+5. **Cancel the Booking & Prove the Slot Frees Up (GS-10 — Part 2):** Updates booking status to cancelled without deleting the database row.
+Cancel booking `1` and re-query `/api/slots` to prove `10:00:00` returns to the available pool:
+
+```bash
+php artisan tinker --execute="
+\$reqCancel = Illuminate\Http\Request::create('/api/bookings/1/cancel', 'POST');
+\$resCancel = app()->handle(\$reqCancel);
+echo 'Cancel Status: ' . \$resCancel->getStatusCode() . PHP_EOL;
+echo 'Booking Status in DB: ' . DB::table('bookings')->where('id', 1)->value('status') . PHP_EOL;
+
+\$tomorrow = now('Asia/Kolkata')->addDay()->toDateString();
+\$reqSlots = Illuminate\Http\Request::create('/api/slots?branch_id=1&service_id=1&date=' . \$tomorrow, 'GET');
+\$resSlots = app()->handle(\$reqSlots);
+echo 'Is 10:00:00 available again? ' . (str_contains(\$resSlots->getContent(), '10:00:00') ? 'YES (Freed)' : 'NO') . PHP_EOL;
+"
+
+```
+
+
+---
+
+## Optional: Parallel `curl` Demo (If Asked for External HTTP Requests)
+
+If the interviewer specifically asks to see two parallel `curl` processes hit the server over HTTP, open **two terminal tabs**:
+
+1. **In Tab 1 (Start the server clean):**
+```bash
+killall -9 php 2>/dev/null
+php artisan serve
+
+```
+
+
+2. **In Tab 2 (Fire simultaneous requests for 11:00 AM):**
+```bash
+curl -i -s -X POST http://127.0.0.1:8000/api/bookings \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"customer_phone":"9876543210","branch_id":1,"service_id":1,"stylist_id":1,"starts_at":"2026-10-25 11:00:00"}' & \
+curl -i -s -X POST http://127.0.0.1:8000/api/bookings \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"customer_phone":"9876543212","branch_id":1,"service_id":1,"stylist_id":1,"starts_at":"2026-10-25 11:00:00"}' &
+wait
+
+```
+
+
+
+---
+
+## What to Say While Each Step Runs
+
+| Ticket | One-Sentence Explanation for the Interviewer |
+| --- | --- |
+| **GS-7** | *"Parent tables migrate before `bookings` so foreign keys bind cleanly, and a compound unique index on `(stylist_id, starts_at)` enforces concurrency at the MySQL storage layer."* |
+| **GS-8** | *"The command streams the CSV with `fopen` and `fgetcsv` in 100-row chunks for constant $O(1)$ memory, using `updateOrCreate` on the 10-digit phone so re-runs are idempotent."* |
+| **GS-9** | *"Instead of querying inside the 30-minute time loop, we load all active bookings for the branch's stylists in a single `whereIn` query and filter overlaps in memory."* |
+| **GS-10** | *"Bookings run inside `DB::transaction` with `lockForUpdate()` to block race conditions with a `409 Conflict`, and cancellations soft-update `status` to preserve audit history."* |
