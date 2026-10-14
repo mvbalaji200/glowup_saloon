@@ -1,12 +1,19 @@
 <?php
+
+use App\Jobs\ProcessStripePayment;
 use App\Models\Booking;
-use App\Models\Customer;
-use App\Models\Stylist;
-use App\Models\Service;
 use App\Models\Branch;
+use App\Models\Customer;
+use App\Models\Service;
+use App\Models\Stylist;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Stripe\Checkout\Session as StripeSession;
+use Stripe\Exception\SignatureVerificationException;
+use Stripe\Stripe;
+use Stripe\Webhook;
 
 // 1. GET /api/slots (GS-9: Free slots per stylist in 1 query)
 Route::get('/slots', function (Request $request) {
@@ -127,4 +134,79 @@ Route::post('/bookings', function (Request $request) {
 Route::post('/bookings/{booking}/cancel', function (Booking $booking) {
     $booking->update(['status' => 'cancelled']);
     return response()->json(['data' => $booking]);
+});
+
+// 4. POST /api/bookings/{booking}/checkout (GS-11: Stripe Checkout Session)
+Route::post('/bookings/{booking}/checkout', function (Booking $booking) {
+    Stripe::setApiKey(config('services.stripe.secret'));
+
+    $service = Service::find($booking->service_id);
+    $amount = (int) (($service->price ?? 500) * 100);
+
+    $session = StripeSession::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency'     => 'inr',
+                'product_data' => [
+                    'name' => $service->name ?? 'Salon Service',
+                ],
+                'unit_amount'  => $amount,
+            ],
+            'quantity'   => 1,
+        ]],
+        'mode'        => 'payment',
+        'success_url' => url('/api/bookings/' . $booking->id . '?session_id={CHECKOUT_SESSION_ID}'),
+        'cancel_url'  => url('/api/bookings/' . $booking->id),
+        'metadata'    => [
+            'booking_id' => (string) $booking->id,
+        ],
+    ]);
+
+    return response()->json([
+        'checkout_url' => $session->url,
+        'session_id'   => $session->id,
+    ], 200);
+});
+
+// 5. POST /api/webhooks/stripe (GS-11: Fast 200, Idempotency, Queued Job)
+Route::post('/webhooks/stripe', function (Request $request) {
+    $payload = $request->getContent();
+    $sigHeader = $request->header('Stripe-Signature');
+    $secret = config('services.stripe.webhook_secret');
+
+    try {
+        $event = Webhook::constructEvent($payload, $sigHeader, $secret);
+    } catch (SignatureVerificationException $e) {
+        return response()->json(['error' => 'Invalid signature'], 400);
+    } catch (\UnexpectedValueException $e) {
+        return response()->json(['error' => 'Invalid payload'], 400);
+    }
+
+    // Idempotency: Ignore duplicate event deliveries
+    $alreadyHandled = DB::table('stripe_events')
+        ->where('event_id', $event->id)
+        ->exists();
+
+    if ($alreadyHandled) {
+        return response()->json(['status' => 'duplicate ignored'], 200);
+    }
+
+    DB::table('stripe_events')->insert([
+        'event_id'   => $event->id,
+        'type'       => $event->type,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    if ($event->type === 'checkout.session.completed') {
+        $session = $event->data->object;
+        $bookingId = $session->metadata->booking_id ?? null;
+
+        if ($bookingId) {
+            ProcessStripePayment::dispatch((int) $bookingId);
+        }
+    }
+
+    return response()->json(['status' => 'success'], 200);
 });
